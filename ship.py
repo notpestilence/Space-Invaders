@@ -24,11 +24,13 @@ class Ship:
 
 
     def update(self):
-        if self.moving_right:
+        if self.moving_right and (self.rect.right < self.screen_rect.right):
+            # If our current ship position < right edge of the screen,
             # Increment movement by specified speed
             # units to the right
             self.x += self.settings.ship_speed
-        if self.moving_left:
+        if self.moving_left and (self.rect.left > 0):
+            # If our current ship position > left edge of the screen,
             # Increment movement by specified speed
             # units to the left
             self.x -= self.settings.ship_speed

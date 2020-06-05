@@ -18,7 +18,7 @@ class SpaceInvaders:
     def run_game(self):
         # Main loop for the game:
         while True:
-            self._check_events()  # Helper method defined below :)
+            self._check_events()  # Helper method(s) defined below :)
             self.ship.update()
             self._update_screen()
 
@@ -28,23 +28,9 @@ class SpaceInvaders:
             if keystroke.type == pg.QUIT:
                 sys.exit()
             elif keystroke.type == pg.KEYDOWN:
-                if keystroke.key == pg.K_RIGHT:
-                    # Increment movement by 30 units
-                    # to the right
-                    self.ship.moving_right = True
-                if keystroke.key == pg.K_LEFT:
-                    # Increment movement by 30 units
-                    # to the left
-                    self.ship.moving_left = True
+                self._check_keydown_events(keystroke)
             elif keystroke.type == pg.KEYUP:
-                if keystroke.key == pg.K_RIGHT:
-                    # Increment movement by 30 units
-                    # to the right
-                    self.ship.moving_right = False
-                if keystroke.key == pg.K_LEFT:
-                    # Increment movement by 30 units
-                    # to the left
-                    self.ship.moving_left = False
+                self._check_keyup_events(keystroke)
 
     def _update_screen(self):
         # Make the most recently drawn surface
@@ -52,6 +38,22 @@ class SpaceInvaders:
         self.screen.fill(self.settings.bg_color)
         self.ship.blitme()
         pg.display.flip()
+
+    def _check_keydown_events(self, keystroke):
+        # Helper function to respond to keystrokes in press
+        if keystroke.key == pg.K_RIGHT:
+            self.ship.moving_right = True
+        elif keystroke.key == pg.K_LEFT:
+            self.ship.moving_left = True
+        elif keystroke.key == pg.K_ESCAPE or keystroke.key == pg.K_q:
+            sys.exit()
+
+    def _check_keyup_events(self, keystroke):
+        # Helper function to respond to keystrokes in release
+        if keystroke.key == pg.K_RIGHT:
+            self.ship.moving_right = False
+        elif keystroke.key == pg.K_LEFT:
+            self.ship.moving_left = False
 
 if __name__ == '__main__':
     si = SpaceInvaders()
