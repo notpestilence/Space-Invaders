@@ -1,9 +1,10 @@
 import sys
 import os
+import math
 import pygame as pg
 from pygame.sprite import Sprite
 from settings import Settings
-from properties import Ship, Bullet
+from properties import Ship, Bullet, Alien
 
 
 class SpaceInvaders:
@@ -15,6 +16,8 @@ class SpaceInvaders:
         self.bg_color = (28, 29, 33)  # HEX is #082051
         self.ship = Ship(self)
         self.bullets = pg.sprite.Group()
+        self.fleet = pg.sprite.Group()
+        self._create_fleet()
 
     def run_game(self):
         # Main loop for the game:
@@ -42,6 +45,7 @@ class SpaceInvaders:
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
+        self.fleet.draw(self.screen)
         pg.display.flip()
 
     def _check_keydown_events(self, keystroke):
@@ -64,8 +68,8 @@ class SpaceInvaders:
 
     def _fire_bullets(self):
         # Add a new bullet object
-        # and add to existing bullets group
         bullet = Bullet(self)
+        # and add to existing bullets group if on-screen bullets is less than 3.
         if len(self.bullets) < self.settings.bullet_allowed:
             self.bullets.add(bullet)
 
@@ -75,6 +79,30 @@ class SpaceInvaders:
         for offscreen in self.bullets.copy():
             if offscreen.rect.bottom <= 0:  # Check if it is indeed offscreen
                 self.bullets.remove(offscreen)  # Remove fired bullet if it is
+
+    def _create_fleet(self):
+        # Add a new alien object
+        alien = Alien(self)
+        # Calculate available space on-screen
+        # and decide how many aliens fit on it.
+        alien_width, alien_height = alien.rect.size
+        ship_height = self.ship.rect.size[1]
+        available_space_row = self.settings.screen_width - (2 * alien_width)
+        available_space_col = self.settings.screen_height - (2 * alien_height) - ship_height
+        num_of_aliens_row = available_space_row // (1.7 * alien_width)
+        num_of_aliens_col = available_space_col // (3 * alien_height)
+        # Trial and error to get desired numbers of aliens
+        for row_number in range(math.ceil(num_of_aliens_col)):  # Ceiling round to render one more alien
+            for alien_number in range(math.ceil(num_of_aliens_row)):
+                self._create_alien(alien_number, row_number)
+
+    def _create_alien(self, alien_number, row_number):
+        alien = Alien(self)
+        alien_width, alien_height = alien.rect.size
+        alien.x = alien_width + 2 * alien_width * alien_number
+        alien.rect.x = alien.x
+        alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
+        self.fleet.add(alien)
 
 
 if __name__ == '__main__':

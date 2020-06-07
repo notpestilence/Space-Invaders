@@ -12,4 +12,5 @@ class Settings:
         self.bullet_width = 3
         self.bullet_height = 15
         self.bullet_color = (255, 228, 228)  # HEX is #FFE4E4
+        self.bullet_allowed = 3
 

@@ -1,9 +1,10 @@
 import pygame as pg
 from pygame.sprite import Sprite
 
+
 class Ship:
     def __init__(self, game):
-        # Set first position of our ship
+        # Initialize surface
         self.screen = game.screen
         self.settings = game.settings
         self.screen_rect = game.screen.get_rect()
@@ -36,9 +37,10 @@ class Ship:
         # Update rect object from self.x
         self.rect.x = self.x
 
+
 class Bullet(Sprite):
     def __init__(self, game):
-        super().__init__()
+        super(Bullet, self).__init__()
         self.ship = Ship(game)
         self.screen = game.screen
         self.settings = game.settings
@@ -60,3 +62,21 @@ class Bullet(Sprite):
     def draw_bullet(self):
         # Method to initialize the bullet
         pg.draw.rect(self.screen, self.color, self.rect)
+
+
+class Alien(Sprite):
+    def __init__(self, game):
+        super(Alien, self).__init__()
+        # Initialize surface
+        self.screen = game.screen
+        self.settings = game.settings
+        self.screen_rect = game.screen.get_rect()
+        # Get the image of the alien
+        self.image = pg.image.load('images/alien.bmp')
+        self.rect = self.image.get_rect()  # Get rectangle attribute
+        # Start each new alien near the top left of the screen.
+        self.rect.x = self.rect.width
+        self.rect.y = self.rect.height
+        # Store a horizontal value for the alien position, self.x.
+        # Used to move the alien left and right.
+        self.x = float(self.rect.x)
